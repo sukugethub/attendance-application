@@ -7,10 +7,7 @@ const authRoutes = require("./routes/auth");
 const dashboardRoutes = require("./routes/dashboard");
 const teacherRoutes = require("./routes/teacher");
 const attendanceRoutes = require("./routes/attendance");
-const { getRegisterForm } = require("./controllers/authController");
 const adminRoutes = require("./routes/admin");
-
-// console.log("authRoutes", authRoutes);
 
 dotenv.config();
 connectDB();
@@ -44,14 +41,19 @@ app.use((req, res, next) => {
 
 // Routes
 app.use("/auth", authRoutes);
-
 app.use("/dashboard", dashboardRoutes);
 app.use("/teacher", teacherRoutes);
 app.use("/attendance", attendanceRoutes);
 app.use("/admin", adminRoutes);
 
 app.get("/", (req, res) => res.render("student-login"));
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () =>
-  console.log(`Server running on http://localhost:${PORT}`)
-);
+
+// Start the server only if this file is run directly
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () =>
+    console.log(`Server running on http://localhost:${PORT}`)
+  );
+}
+
+module.exports = app; // Export the app for testing
