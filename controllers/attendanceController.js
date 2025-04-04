@@ -38,6 +38,7 @@ module.exports.generateAttendanceCode = async (req, res) => {
     });
 
     const savedAttendanceSession = await newAttendanceSession.save();
+    console.log("saved attendance session : \n" + savedAttendanceSession);
     // Initialize attendance status for each enrolled student in the course
     const enrolledStudents = course.enrolledStudents; // Get the list of enrolled students from the course
     console.log("Enrolled students: ", enrolledStudents); // Log the enrolled students for debugging
@@ -73,13 +74,22 @@ module.exports.generateAttendanceCode = async (req, res) => {
         const savedRecord = await studAttRecord.save();
         console.log("saved record in attendance : \n" + savedRecord); // Save the updated attendance record
       } else {
-        console.log("Course attendance not found");
+        studAttRecord.courses.push({
+          courseId: course._id,
+          attendance: [{
+            sessionId: savedAttendanceSession._id,
+            date: new Date(),
+            present: false,
+          },]
+        });
+        const newCourseAtt = await studAttRecord.save();
+        console.log("New course added to attendance : \n"+ newCourseAtt);
       }
 
       // Save the updated attendance record
       // await studAttRecord.save();
     }
-    console.log("saved attendance session : \n" + savedAttendanceSession);
+   
     req.flash("success", `Attendance code generated: ${attendanceCode}`);
     res.redirect(`/dashboard/teacher/${teacherId}`);
 

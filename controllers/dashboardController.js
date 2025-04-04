@@ -25,7 +25,7 @@ module.exports.getStudentDashboard = async (req, res) => {
     path: "courses.courseId",
     select: "name _id description", // Ensure courseId is included
   });
-
+console.log("attendance data : \n"+attendanceData);
   // Ensure attendanceData is always an object with a courses array
   if (!attendanceData) {
     attendanceData = { studentId: id, courses: [] };
