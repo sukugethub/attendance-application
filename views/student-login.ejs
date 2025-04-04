@@ -25,6 +25,24 @@
     <link rel="stylesheet" href="/css/styles-login.css" />
   </head>
   <body>
+    
+      <% if (successMessage.length > 0) { %>
+        <div class="position-relative container" ><div class="alert alert-success alert-dismissible fade show position-absolute" role="alert">
+          <%= successMessage %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div></div>
+          
+      <% } %>
+      
+      <% if (errorMessage.length > 0) { %>
+        <div class="position-relative container" ><div class="alert alert-danger position-absolute">
+          <%= errorMessage %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div></div>
+          
+        
+      <% } %>
+  
     <div class="container">
       <div class="login-box">
         <h2>Student Login</h2>

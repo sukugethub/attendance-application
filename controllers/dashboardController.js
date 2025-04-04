@@ -16,6 +16,9 @@ module.exports.getStudentDashboard = async (req, res) => {
       select: "name",
     },
   });
+  if(student.role !== 'student')
+    { req.flash('error', 'Access denied! You are not a student');
+    return res.redirect('/auth/login')} ;
 
   // Fetch attendance data and populate course details
   let attendanceData = await Attendance.findOne({ studentId: id }).populate({
@@ -46,6 +49,7 @@ module.exports.getTeacherDashboard = async (req, res) => {
         select: "name email",
       },
     });
+    if(teacherDetails.role !== 'teacher'){ req.flash('error', 'Access denied! You are not a teacher');return res.redirect('/auth/login')} ;
     console.log("Teacher details : \n", teacherDetails);
     const attendanceSessions = await AttendanceSessions.find({ teacherId })
       .populate("courseId", "name _id code")
@@ -62,6 +66,7 @@ module.exports.getAdminDashboard = async (req, res) => {
     const adminId = req.params.id; // Extract teacher ID from the token
 
     const adminDetails = await User.findOne({ _id: adminId });
+    if(adminDetails.role !== 'admin'){ req.flash('error', 'Access denied! You are not an admin');return res.redirect('/auth/login')} ;
     console.log("Admin details : \n", adminDetails);
     const courses = await Course.find().populate("teacher", "name");
     const teacherDetails = await User.find({ role: "teacher" }).populate(
